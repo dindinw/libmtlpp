@@ -1226,6 +1226,24 @@ namespace mtlpp
 #endif
     }
 
+    uint64_t Device::GetRegistryID() const
+    {
+#if MTLPP_IS_AVAILABLE(10_13, 11_0)
+        return [(__bridge id<MTLDevice>)m_ptr registryID];
+#else
+        return 0;
+#endif
+    }
+
+    int Device::GetCurrentAllocatedSize() const
+    {
+#if MTLPP_IS_AVAILABLE(10_13, 11_0)
+        return [(__bridge id<MTLDevice>)m_ptr currentAllocatedSize];
+#else
+        return 0;
+#endif
+    }
+
     uint64_t Device::GetRecommendedMaxWorkingSetSize() const
     {
 #if MTLPP_IS_AVAILABLE_MAC(10_12)
