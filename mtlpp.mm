@@ -338,7 +338,7 @@ namespace mtlpp
     void BlitCommandEncoder::UpdateFence(const Fence& fence)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_12, 10_0)
         [(__bridge id<MTLBlitCommandEncoder>)m_ptr
             updateFence:(__bridge id<MTLFence>)fence.GetPtr()];
 #endif
@@ -346,7 +346,7 @@ namespace mtlpp
 
     void BlitCommandEncoder::WaitForFence(const Fence& fence)
     {
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_12, 10_0)
         [(__bridge id<MTLBlitCommandEncoder>)m_ptr
             waitForFence:(__bridge id<MTLFence>)fence.GetPtr()];
 #endif
@@ -390,7 +390,7 @@ namespace mtlpp
     Texture Buffer::NewTexture(const TextureDescriptor& descriptor, uint32_t offset, uint32_t bytesPerRow)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(8_0)
+#if MTLPP_IS_AVAILABLE(10_12, 8_0)
         MTLTextureDescriptor* mtlTextureDescriptor = (__bridge MTLTextureDescriptor*)descriptor.GetPtr();
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLBuffer>)m_ptr newTextureWithDescriptor:mtlTextureDescriptor offset:offset bytesPerRow:bytesPerRow] };
 #else
@@ -473,7 +473,7 @@ namespace mtlpp
     double CommandBuffer::GetKernelStartTime() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_3)
+#if MTLPP_IS_AVAILABLE(10_15, 10_3)
         return [(__bridge id<MTLCommandBuffer>)m_ptr kernelStartTime];
 #else
         return 0.0;
@@ -483,7 +483,7 @@ namespace mtlpp
     double CommandBuffer::GetKernelEndTime() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_3)
+#if MTLPP_IS_AVAILABLE(10_15, 10_3)
         return [(__bridge id<MTLCommandBuffer>)m_ptr kernelEndTime];
 #else
         return 0.0;
@@ -493,7 +493,7 @@ namespace mtlpp
     double CommandBuffer::GetGpuStartTime() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_3)
+#if MTLPP_IS_AVAILABLE(10_15, 10_3)
         return [(__bridge id<MTLCommandBuffer>)m_ptr GPUStartTime];
 #else
         return 0.0;
@@ -503,7 +503,7 @@ namespace mtlpp
     double CommandBuffer::GetGpuEndTime() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_3)
+#if MTLPP_IS_AVAILABLE(10_15, 10_3)
         return [(__bridge id<MTLCommandBuffer>)m_ptr GPUEndTime];
 #else
         return 0.0;
@@ -558,13 +558,13 @@ namespace mtlpp
         [(__bridge id<MTLCommandBuffer>)m_ptr presentDrawable:(__bridge id<MTLDrawable>)drawable.GetPtr() atTime:presentationTime];
     }
 
+#if MTLPP_IS_AVAILABLE(10_15, 10_3)
     void CommandBuffer::PresentAfterMinimumDuration(const Drawable& drawable, double duration)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_3)
         [(__bridge id<MTLCommandBuffer>)m_ptr presentDrawable:(__bridge id<MTLDrawable>)drawable.GetPtr() afterMinimumDuration:duration];
-#endif
     }
+#endif
 
     void CommandBuffer::WaitUntilScheduled()
     {
@@ -707,11 +707,6 @@ namespace mtlpp
         return ns::Handle { (__bridge void*)[(__bridge id<MTLCommandQueue>)m_ptr commandBuffer] };
     }
 
-    void CommandQueue::InsertDebugCaptureBoundary()
-    {
-        Validate();
-        [(__bridge id<MTLCommandQueue>)m_ptr insertDebugCaptureBoundary];
-    }
 }
 
 //////////////////////////////////////
@@ -874,21 +869,21 @@ namespace mtlpp
                                                                        threadsPerThreadgroup:mtlThreadsPerThreadgroup];
     }
 
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
     void ComputeCommandEncoder::UpdateFence(const Fence& fence)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
         [(__bridge id<MTLComputeCommandEncoder>)m_ptr updateFence:(__bridge id<MTLFence>)fence.GetPtr()];
-#endif
     }
+#endif
 
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
     void ComputeCommandEncoder::WaitForFence(const Fence& fence)
     {
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
         [(__bridge id<MTLComputeCommandEncoder>)m_ptr waitForFence:(__bridge id<MTLFence>)fence.GetPtr()];
-#endif
     }
 }
+#endif
 
 //////////////////////////////////////
 // FILE: compute_pipeline.mm
@@ -1264,7 +1259,7 @@ namespace mtlpp
 
     SizeAndAlign Device::HeapTextureSizeAndAlign(const TextureDescriptor& desc)
     {
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         MTLSizeAndAlign mtlSizeAndAlign = [(__bridge id<MTLDevice>)m_ptr heapTextureSizeAndAlignWithDescriptor:(__bridge MTLTextureDescriptor*)desc.GetPtr()];
         return SizeAndAlign{ uint32_t(mtlSizeAndAlign.size), uint32_t(mtlSizeAndAlign.align) };
 #else
@@ -1274,7 +1269,7 @@ namespace mtlpp
 
     SizeAndAlign Device::HeapBufferSizeAndAlign(uint32_t length, ResourceOptions options)
     {
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         MTLSizeAndAlign mtlSizeAndAlign = [(__bridge id<MTLDevice>)m_ptr heapBufferSizeAndAlignWithLength:length options:MTLResourceOptions(options)];
         return SizeAndAlign{ uint32_t(mtlSizeAndAlign.size), uint32_t(mtlSizeAndAlign.align) };
 #else
@@ -1284,7 +1279,7 @@ namespace mtlpp
 
     Heap Device::NewHeap(const HeapDescriptor& descriptor)
     {
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLDevice>)m_ptr newHeapWithDescriptor:(__bridge MTLHeapDescriptor*)descriptor.GetPtr()] };
 #else
         return ns::Handle{ nullptr };
@@ -1485,12 +1480,6 @@ namespace mtlpp
         return ns::Handle{ (__bridge void*)state };
     }
 
-    ComputePipelineState Device::NewComputePipelineState(const Function& computeFunction, PipelineOption options, ComputePipelineReflection& outReflection, ns::Error* error)
-    {
-        Validate();
-        return ns::Handle{ nullptr };
-    }
-
     void Device::NewComputePipelineState(const Function& computeFunction, std::function<void(const ComputePipelineState&, const ns::Error&)> completionHandler)
     {
         Validate();
@@ -1569,7 +1558,7 @@ namespace mtlpp
     Fence Device::NewFence()
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLDevice>)m_ptr newFence] };
 #else
         return ns::Handle{ nullptr };
@@ -1609,7 +1598,7 @@ namespace mtlpp
     double Drawable::GetPresentedTime() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_3)
+#if MTLPP_IS_AVAILABLE(10_15, 10_3)
         return [(__bridge id<MTLDrawable>)m_ptr presentedTime];
 #else
         return 0.0;
@@ -1619,7 +1608,7 @@ namespace mtlpp
     uint64_t Drawable::GetDrawableID() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_3)
+#if MTLPP_IS_AVAILABLE(10_15, 10_3)
         return [(__bridge id<MTLDrawable>)m_ptr drawableID];
 #else
         return 0;
@@ -1638,24 +1627,24 @@ namespace mtlpp
         [(__bridge id<MTLDrawable>)m_ptr presentAtTime:presentationTime];
     }
 
+#if MTLPP_IS_AVAILABLE(10_15, 10_3)
     void Drawable::PresentAfterMinimumDuration(double duration)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_3)
         [(__bridge id<MTLDrawable>)m_ptr presentAfterMinimumDuration:duration];
-#endif
     }
+#endif
 
+#if MTLPP_IS_AVAILABLE(10_15, 10_3)
     void Drawable::AddPresentedHandler(std::function<void(const Drawable&)> handler)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_3)
         [(__bridge id<MTLDrawable>)m_ptr addPresentedHandler:^(id <MTLDrawable> mtlDrawable){
             Drawable drawable(ns::Handle{ (__bridge void*)mtlDrawable });
             handler(drawable);
         }];
-#endif
     }
+#endif
 
 }
 
@@ -1668,7 +1657,7 @@ namespace mtlpp
  */
 
 // #include "fence.hpp"
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
 #   include <Metal/MTLFence.h>
 #endif
 
@@ -1677,7 +1666,7 @@ namespace mtlpp
     Texture Fence::GetDevice() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLFence>)m_ptr device] };
 #else
         return ns::Handle{ nullptr };
@@ -1687,7 +1676,7 @@ namespace mtlpp
     ns::String Fence::GetLabel() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLFence>)m_ptr label] };
 #else
         return ns::Handle{ nullptr };
@@ -1697,7 +1686,7 @@ namespace mtlpp
     void Fence::SetLabel(const ns::String& label)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         [(__bridge id<MTLFence>)m_ptr setLabel:(__bridge NSString*)label.GetPtr()];
 #endif
     }
@@ -1769,7 +1758,7 @@ namespace mtlpp
  */
 
 // #include "heap.hpp"
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
 #   include <Metal/MTLHeap.h>
 #endif
 
@@ -1778,7 +1767,7 @@ namespace mtlpp
     uint32_t HeapDescriptor::GetSize() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return uint32_t([(__bridge MTLHeapDescriptor*)m_ptr size]);
 #else
         return 0;
@@ -1789,7 +1778,7 @@ namespace mtlpp
     StorageMode HeapDescriptor::GetStorageMode() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return StorageMode([(__bridge MTLHeapDescriptor*)m_ptr storageMode]);
 #else
         return StorageMode(0);
@@ -1800,7 +1789,7 @@ namespace mtlpp
     CpuCacheMode HeapDescriptor::GetCpuCacheMode() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return CpuCacheMode([(__bridge MTLHeapDescriptor*)m_ptr cpuCacheMode]);
 #else
         return CpuCacheMode(0);
@@ -1811,7 +1800,7 @@ namespace mtlpp
     void HeapDescriptor::SetSize(uint32_t size) const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         [(__bridge MTLHeapDescriptor*)m_ptr setSize:size];
 #endif
 
@@ -1820,7 +1809,7 @@ namespace mtlpp
     void HeapDescriptor::SetStorageMode(StorageMode storageMode) const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         [(__bridge MTLHeapDescriptor*)m_ptr setStorageMode:MTLStorageMode(storageMode)];
 #endif
 
@@ -1829,7 +1818,7 @@ namespace mtlpp
     void HeapDescriptor::SetCpuCacheMode(CpuCacheMode cpuCacheMode) const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         [(__bridge MTLHeapDescriptor*)m_ptr setCpuCacheMode:MTLCPUCacheMode(cpuCacheMode)];
 #endif
 
@@ -1838,7 +1827,7 @@ namespace mtlpp
     ns::String Heap::GetLabel() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLHeap>)m_ptr label] };
 #else
         return ns::Handle{ nullptr };
@@ -1849,7 +1838,7 @@ namespace mtlpp
     Device Heap::GetDevice() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLHeap>)m_ptr device] };
 #else
         return ns::Handle{ nullptr };
@@ -1860,7 +1849,7 @@ namespace mtlpp
     StorageMode Heap::GetStorageMode() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return StorageMode([(__bridge id<MTLHeap>)m_ptr storageMode]);
 #else
         return StorageMode(0);
@@ -1871,7 +1860,7 @@ namespace mtlpp
     CpuCacheMode Heap::GetCpuCacheMode() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return CpuCacheMode([(__bridge id<MTLHeap>)m_ptr cpuCacheMode]);
 #else
         return CpuCacheMode(0);
@@ -1882,7 +1871,7 @@ namespace mtlpp
     uint32_t Heap::GetSize() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return uint32_t([(__bridge id<MTLHeap>)m_ptr size]);
 #else
         return 0;
@@ -1893,7 +1882,7 @@ namespace mtlpp
     uint32_t Heap::GetUsedSize() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return uint32_t([(__bridge id<MTLHeap>)m_ptr usedSize]);
 #else
         return 0;
@@ -1904,7 +1893,7 @@ namespace mtlpp
     void Heap::SetLabel(const ns::String& label)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         [(__bridge id<MTLHeap>)m_ptr setLabel:(__bridge NSString*)label.GetPtr()];
 #endif
 
@@ -1913,7 +1902,7 @@ namespace mtlpp
     uint32_t Heap::MaxAvailableSizeWithAlignment(uint32_t alignment)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return uint32_t([(__bridge id<MTLHeap>)m_ptr maxAvailableSizeWithAlignment:alignment]);
 #else
         return 0;
@@ -1924,7 +1913,7 @@ namespace mtlpp
     Buffer Heap::NewBuffer(uint32_t length, ResourceOptions options)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLHeap>)m_ptr newBufferWithLength:length options:MTLResourceOptions(options)] };
 #else
         return ns::Handle{ nullptr };
@@ -1935,7 +1924,7 @@ namespace mtlpp
     Texture Heap::NewTexture(const TextureDescriptor& desc)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLHeap>)m_ptr newTextureWithDescriptor:(__bridge MTLTextureDescriptor*)desc.GetPtr()] };
 #else
         return ns::Handle{ nullptr };
@@ -1946,7 +1935,7 @@ namespace mtlpp
     PurgeableState Heap::SetPurgeableState(PurgeableState state)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return PurgeableState([(__bridge id<MTLHeap>)m_ptr setPurgeableState:MTLPurgeableState(state)]);
 #else
         return PurgeableState(0);
@@ -2951,18 +2940,10 @@ namespace mtlpp
                                                       indirectBufferOffset:indirectBufferOffset];
     }
 
-    void RenderCommandEncoder::TextureBarrier()
-    {
-        Validate();
-#if MTLPP_IS_AVAILABLE_MAC(10_11)
-        [(__bridge id<MTLRenderCommandEncoder>)m_ptr textureBarrier];
-#endif
-    }
-
     void RenderCommandEncoder::UpdateFence(const Fence& fence, RenderStages afterStages)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         [(__bridge id<MTLRenderCommandEncoder>)m_ptr updateFence:(__bridge id<MTLFence>)fence.GetPtr() afterStages:MTLRenderStages(afterStages)];
 #endif
     }
@@ -2970,7 +2951,7 @@ namespace mtlpp
     void RenderCommandEncoder::WaitForFence(const Fence& fence, RenderStages beforeStages)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         [(__bridge id<MTLRenderCommandEncoder>)m_ptr waitForFence:(__bridge id<MTLFence>)fence.GetPtr() beforeStages:MTLRenderStages(beforeStages)];
 #endif
     }
@@ -3221,7 +3202,7 @@ namespace mtlpp
     MultisampleDepthResolveFilter RenderPassDepthAttachmentDescriptor::GetDepthResolveFilter() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(9_0)
+#if MTLPP_IS_AVAILABLE(10_14, 9_0)
         return MultisampleDepthResolveFilter([(__bridge MTLRenderPassDepthAttachmentDescriptor*)m_ptr depthResolveFilter]);
 #else
         return MultisampleDepthResolveFilter(0);
@@ -3237,7 +3218,7 @@ namespace mtlpp
     void RenderPassDepthAttachmentDescriptor::SetDepthResolveFilter(MultisampleDepthResolveFilter depthResolveFilter)
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(9_0)
+#if MTLPP_IS_AVAILABLE(10_14, 9_0)
         [(__bridge MTLRenderPassDepthAttachmentDescriptor*)m_ptr setDepthResolveFilter:MTLMultisampleDepthResolveFilter(depthResolveFilter)];
 #endif
     }
@@ -3794,7 +3775,7 @@ namespace mtlpp
     Heap Resource::GetHeap() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return ns::Handle{ (__bridge void*)[(__bridge id<MTLResource>)m_ptr heap] };
 #else
         return ns::Handle{ nullptr };
@@ -3804,7 +3785,7 @@ namespace mtlpp
     bool Resource::IsAliasable() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         return [(__bridge id<MTLResource>)m_ptr isAliasable];
 #else
         return false;
@@ -3826,7 +3807,7 @@ namespace mtlpp
     void Resource::MakeAliasable() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE_IOS(10_0)
+#if MTLPP_IS_AVAILABLE(10_13, 10_0)
         [(__bridge id<MTLResource>)m_ptr makeAliasable];
 #endif
     }
