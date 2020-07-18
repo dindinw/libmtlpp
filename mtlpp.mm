@@ -558,7 +558,7 @@ namespace mtlpp
         [(__bridge id<MTLCommandBuffer>)m_ptr presentDrawable:(__bridge id<MTLDrawable>)drawable.GetPtr() atTime:presentationTime];
     }
 
-#if MTLPP_IS_AVAILABLE(10_15, 10_3)
+#if MTLPP_IS_AVAILABLE(10_15_4, 10_3)
     void CommandBuffer::PresentAfterMinimumDuration(const Drawable& drawable, double duration)
     {
         Validate();
@@ -1616,7 +1616,7 @@ namespace mtlpp
     double Drawable::GetPresentedTime() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE(10_15, 10_3)
+#if MTLPP_IS_AVAILABLE(10_15_4, 10_3)
         return [(__bridge id<MTLDrawable>)m_ptr presentedTime];
 #else
         return 0.0;
@@ -1626,7 +1626,7 @@ namespace mtlpp
     uint64_t Drawable::GetDrawableID() const
     {
         Validate();
-#if MTLPP_IS_AVAILABLE(10_15, 10_3)
+#if MTLPP_IS_AVAILABLE(10_15_4, 10_3)
         return [(__bridge id<MTLDrawable>)m_ptr drawableID];
 #else
         return 0;
@@ -1645,7 +1645,7 @@ namespace mtlpp
         [(__bridge id<MTLDrawable>)m_ptr presentAtTime:presentationTime];
     }
 
-#if MTLPP_IS_AVAILABLE(10_15, 10_3)
+#if MTLPP_IS_AVAILABLE(10_15_4, 10_3)
     void Drawable::PresentAfterMinimumDuration(double duration)
     {
         Validate();
@@ -1653,7 +1653,7 @@ namespace mtlpp
     }
 #endif
 
-#if MTLPP_IS_AVAILABLE(10_15, 10_3)
+#if MTLPP_IS_AVAILABLE(10_15_4, 10_3)
     void Drawable::AddPresentedHandler(std::function<void(const Drawable&)> handler)
     {
         Validate();
